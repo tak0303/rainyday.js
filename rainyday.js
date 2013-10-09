@@ -95,6 +95,7 @@ RainyDay.prototype.prepareCanvas = function(element, autoHide) {
  * @param canvas the canvas
  * @param element the element below
  */
+
 function checkSize(canvas, element) {
 	if (canvas.style.width !== element.clientWidth) {
 		canvas.style.width = element.clientWidth;
@@ -587,7 +588,9 @@ RainyDay.prototype.prepareBackground = function(width, height) {
 	}
 
 	this.background = document.createElement('canvas');
-	this.background.setAttribute("style", "-webkit-filter: blur(20px); -webkit-transform: translatez(0);");
+	if (!isNaN(this.blurRadius) && this.blurRadius >= 1) {
+		this.background.setAttribute('style', '-webkit-filter: blur(' + this.blurRadius + 'px); -webkit-transform: translatez(0);');
+	}
 	this.background.style.position = 'absolute';
 	this.background.width = this.canvas.width;
 	this.background.height = this.canvas.height;
@@ -595,7 +598,7 @@ RainyDay.prototype.prepareBackground = function(width, height) {
 	this.background.style.top = this.canvas.offsetTop;
 	this.background.style.zIndex = this.canvas.style.zIndex - 100;
 	document.getElementsByTagName('body')[0].appendChild(this.background);
-	
+
 	this.clearbackground = document.createElement('canvas');
 	this.clearbackground.width = this.canvas.width;
 	this.clearbackground.height = this.canvas.height;
@@ -603,14 +606,10 @@ RainyDay.prototype.prepareBackground = function(width, height) {
 	var context = this.background.getContext('2d');
 	context.clearRect(0, 0, width, height);
 	context.drawImage(this.img, 0, 0, width, height);
-	
+
 	context = this.clearbackground.getContext('2d');
 	context.clearRect(0, 0, width, height);
 	context.drawImage(this.img, 0, 0, width, height);
-
-	if (isNaN(this.blurRadius) || this.blurRadius < 1) {
-		return;
-	}
 };
 
 /**
